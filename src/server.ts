@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import cors from "cors";
 
+import { createNewUser, signIn } from "./handlers/users";
+import { protect } from "./modules/auth";
 import router from "./router";
 
 /**
@@ -33,6 +35,8 @@ app.get("/", (req, res) => {
     .end();
 });
 
-app.use("/api", router);
+app.use("/api", protect, router);
+app.post("/user", createNewUser);
+app.post("/signin", signIn);
 
 export { app };

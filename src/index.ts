@@ -1,6 +1,9 @@
+import * as dotenv from "dotenv";
 import { app } from "./server";
 
-const PORT = process.env.POST || 3001;
+dotenv.config();
+
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`express server at: http://localhost:${PORT}`);
