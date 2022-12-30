@@ -2,6 +2,13 @@ import { body } from "express-validator";
 import { Router } from "express";
 
 import { handleInputErrors } from "./modules/middleware";
+import {
+  getProducts,
+  getOneProduct,
+  updateProduct,
+  createProduct,
+  deleteProduct,
+} from "./handlers/product";
 
 const router = Router();
 const endPoints = {
@@ -48,31 +55,21 @@ const validate = {
 /**
  * Product
  */
-router.get(`${product}`, (req, res) => {
-  res.status(200).json({ message: "products list" });
-});
-router.get(`${product}/:id`, (req, res) => {
-  res.status(200).json({ message: "product by ID" });
-});
+router.get(`${product}`, getProducts);
+router.get(`${product}/:id`, getOneProduct);
 router.post(
   `${product}`,
   ...validate.product.post,
   handleInputErrors,
-  (req, res) => {
-    res.status(200).json({ message: "new product created" });
-  }
+  createProduct
 );
 router.put(
   `${product}/:id`,
   ...validate.product.put,
   handleInputErrors,
-  (req, res) => {
-    res.status(200).json({ message: "product updated" });
-  }
+  updateProduct
 );
-router.delete(`${product}/:id`, (req, res) => {
-  res.status(200).json({ message: "product deleted" });
-});
+router.delete(`${product}/:id`, deleteProduct);
 
 /**
  * Update
