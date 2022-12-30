@@ -12,7 +12,7 @@ export const createJWT = (user: Record<string, any>) => {
 };
 
 /**
- * @description a middleware to protect routes by allowing the authenticated users only
+ * @description a middleware to protect routes by allowing the authenticated users only, and adds `req.user` property to the request object if user is authenticated
  * @param {Request} req request service object
  * @param {Response} res response service object
  * @param {NextFunction} next service Function to proceed to next
@@ -34,6 +34,7 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
+    (req as Record<string, any>).user = user;
     next();
   } catch (error) {
     res.status(401).json({ message: "Not valid token" });
