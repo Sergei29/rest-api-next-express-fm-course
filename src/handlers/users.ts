@@ -1,16 +1,15 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 import { hashPassword, comparePasswords, createJWT } from "../modules/auth";
+import { errorTypes } from "../constants";
 import prisma from "../db";
 
-export const createNewUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(401).json({ message: "No credentials provided" });
-    return;
-  }
-
+export const createNewUser: RequestHandler = async (req, res, next) => {
   try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      throw new Error("no_credentials_provided");
+    }
     const hashedPw = await hashPassword(password);
     const user = await prisma.user.create({
       data: {
@@ -24,19 +23,19 @@ export const createNewUser = async (req: Request, res: Response) => {
     res.status(200).json({ token });
     return;
   } catch (error) {
-    res.status(401).json({ message: "Signup failed." });
+    error.type = errorTypes.signupFailed;
+    next(error);
     return;
   }
 };
 
-export const signIn = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(401).json({ message: "No credentials provided" });
-    return;
-  }
-
+export const signIn: RequestHandler = async (req, res, next) => {
   try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      throw new Error("no_credentials_provided");
+    }
+
     const user = await prisma.user.findUnique({
       where: { username },
     });
@@ -56,9 +55,8 @@ export const signIn = async (req: Request, res: Response) => {
     res.status(200).json({ token });
     return;
   } catch (error) {
-    const msg =
-      error instanceof Error ? error.message : "Authentication failed";
-    res.status(401).json({ message: msg });
+    error.type = errorTypes.authFailed;
+    next(error);
     return;
   }
 };

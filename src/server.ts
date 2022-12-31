@@ -31,7 +31,7 @@ import router from "./router";
 const handleErrors: ErrorRequestHandler = (error, req, res, next) => {
   const message =
     error instanceof Error ? error.message : "Server: an error occurred";
-  res.status(500).json({ message });
+  res.status(500).json({ message: error.type || message });
 };
 
 /**
