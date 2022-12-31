@@ -8,7 +8,12 @@ import {
   updateProduct,
   createProduct,
   deleteProduct,
-} from "./handlers/product";
+  getUpdates,
+  getOneUpdate,
+  createUpdate,
+  updateUpdate,
+  deleteUpdate,
+} from "./handlers";
 
 const router = Router();
 const endPoints = {
@@ -32,7 +37,7 @@ const validate = {
       body("version").optional(),
       body("asset").optional(),
 
-      body("productId").custom(async (value) => {}),
+      body("productId").exists({ checkFalsy: true }).isString(),
     ],
     put: [
       body("title").optional(),
@@ -74,31 +79,21 @@ router.delete(`${product}/:id`, deleteProduct);
 /**
  * Update
  */
-router.get(`${update}`, (req, res) => {
-  res.status(200).json({ message: "updates list" });
-});
-router.get(`${update}/:id`, (req, res) => {
-  res.status(200).json({ message: "update by ID" });
-});
+router.get(`${update}`, getUpdates);
+router.get(`${update}/:id`, getOneUpdate);
 router.post(
   `${update}`,
   ...validate.update.post,
   handleInputErrors,
-  (req, res) => {
-    res.status(200).json({ message: "new update created" });
-  }
+  createUpdate
 );
 router.put(
   `${update}/:id`,
   ...validate.update.put,
   handleInputErrors,
-  (req, res) => {
-    res.status(200).json({ message: "update edited" });
-  }
+  updateUpdate
 );
-router.delete(`${update}/:id`, (req, res) => {
-  res.status(200).json({ message: "update deleted" });
-});
+router.delete(`${update}/:id`, deleteUpdate);
 
 /**
  * Update Point

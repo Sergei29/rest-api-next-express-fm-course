@@ -1,15 +1,7 @@
-import { Response, RequestHandler } from "express";
+import { RequestHandler } from "express";
 
 import prisma from "../db";
-
-const handleError = (
-  res: Response,
-  error: any,
-  defaultMessage = "An error occurred"
-) => {
-  const msg = error instanceof Error ? error.message : defaultMessage;
-  res.status(400).json({ message: msg });
-};
+import { handleError } from ".";
 
 export const getProducts: RequestHandler = async (req, res) => {
   const { user } = req as Record<string, any>;
@@ -37,6 +29,7 @@ export const getOneProduct: RequestHandler = async (req, res) => {
     });
 
     res.status(200).json({ data: productFound });
+    return;
   } catch (error) {
     handleError(res, error, "Failed to fetch the product");
     return;
@@ -54,6 +47,7 @@ export const createProduct: RequestHandler = async (req, res) => {
       },
     });
     res.status(200).json({ data: newProduct });
+    return;
   } catch (error) {
     handleError(res, error, "Failed to create new product");
     return;
@@ -78,6 +72,7 @@ export const updateProduct: RequestHandler = async (req, res) => {
     });
 
     res.status(200).json({ data: updatedProduct });
+    return;
   } catch (error) {
     handleError(res, error, "Failed to update the product");
     return;
@@ -97,7 +92,8 @@ export const deleteProduct: RequestHandler = async (req, res) => {
       },
     });
 
-    res.status(200).json({ data: deletedProduct.id });
+    res.status(200).json({ data: deletedProduct });
+    return;
   } catch (error) {
     handleError(res, error, "Failed to delete the product");
     return;
