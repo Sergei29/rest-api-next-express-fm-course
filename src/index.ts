@@ -1,10 +1,10 @@
 import * as dotenv from "dotenv";
 import { app } from "./server";
+import config from "./config";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3001;
-
-app.listen(PORT, () => {
-  console.log(`express server at: http://localhost:${PORT}`);
+app.listen(config.port, () => {
+  config.stage === "local" &&
+    console.log(`express server at: http://localhost:${config.port}`);
 });
