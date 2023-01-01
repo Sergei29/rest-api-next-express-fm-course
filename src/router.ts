@@ -1,7 +1,7 @@
-import { body } from "express-validator";
 import { Router } from "express";
 
 import { handleInputErrors } from "./modules/middleware";
+import { validate } from "./constants/routesValidation";
 import {
   getProducts,
   getOneProduct,
@@ -23,39 +23,6 @@ const endPoints = {
 } as const;
 
 const { product, update, updatePoint } = endPoints;
-
-const validate = {
-  product: {
-    post: [body("name").exists({ checkFalsy: true }).isString()],
-    put: [body("name").exists({ checkFalsy: true }).isString()],
-  },
-  update: {
-    post: [
-      body("title").exists({ checkFalsy: true }).isString(),
-      body("body").exists({ checkFalsy: true }).isString(),
-      body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
-      body("version").optional(),
-      body("asset").optional(),
-
-      body("productId").exists({ checkFalsy: true }).isString(),
-    ],
-    put: [
-      body("title").optional(),
-      body("body").optional(),
-      body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
-      body("version").optional(),
-      body("asset").optional(),
-    ],
-  },
-  updatePoint: {
-    post: [
-      body("name").exists({ checkFalsy: true }).isString(),
-      body("description").exists({ checkFalsy: true }).isString(),
-      body("updateId").exists({ checkFalsy: true }).isString(),
-    ],
-    put: [body("name").optional(), body("description").optional()],
-  },
-};
 
 /**
  * Product

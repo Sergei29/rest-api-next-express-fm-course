@@ -1,5 +1,6 @@
 export const errorTypes = {
-  signupFailed: "signup failed",
+  invalidInput: "invalid input",
+  signupFailed: "sign up failed",
   authFailed: "authentication failed",
   getProductsError: "failed to get products list",
   getOneProductError: "failed to get one product",
@@ -12,3 +13,35 @@ export const errorTypes = {
   updateUpdateError: "failed to edit the update",
   deleteUpdateError: "failed to delete the update",
 } as const;
+
+const {
+  invalidInput,
+  signupFailed,
+  authFailed,
+  getProductsError,
+  getOneProductError,
+  getOneUpdateError,
+  getUpdatesError,
+  createProductError,
+  createUpdateError,
+  updateProductError,
+  updateUpdateError,
+  deleteProductError,
+  deleteUpdateError,
+} = errorTypes;
+
+export const statusCode = {
+  [invalidInput]: 401,
+  [signupFailed]: 401,
+  [authFailed]: 401,
+  [getProductsError]: 400,
+  [getOneProductError]: 400,
+  [getOneUpdateError]: 400,
+  [getUpdatesError]: 400,
+  [createProductError]: 400,
+  [createUpdateError]: 400,
+  [updateProductError]: 400,
+  [updateUpdateError]: 400,
+  [deleteProductError]: 400,
+  [deleteUpdateError]: 400,
+};

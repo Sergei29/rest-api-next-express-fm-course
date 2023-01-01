@@ -8,7 +8,10 @@ import morgan from "morgan";
 import cors from "cors";
 
 import { createNewUser, signIn } from "./handlers/users";
+import { handleInputErrors } from "./modules/middleware";
+import { validate } from "./constants/routesValidation";
 import { protect } from "./modules/auth";
+import { statusCode } from "./constants";
 import router from "./router";
 
 /**
@@ -31,7 +34,9 @@ import router from "./router";
 const handleErrors: ErrorRequestHandler = (error, req, res, next) => {
   const message =
     error instanceof Error ? error.message : "Server: an error occurred";
-  res.status(500).json({ message: error.type || message });
+  res
+    .status(statusCode[error.type] || 500)
+    .json({ message: error.type || message });
 };
 
 /**
@@ -64,8 +69,8 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api", protect, router);
-app.post("/user", createNewUser);
-app.post("/signin", signIn);
+app.post("/user", ...validate.user.signUp, handleInputErrors, createNewUser);
+app.post("/signin", ...validate.user.signIn, handleInputErrors, signIn);
 app.use(handleErrors);
 
 export { app };

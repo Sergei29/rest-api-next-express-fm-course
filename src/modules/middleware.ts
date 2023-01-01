@@ -1,6 +1,8 @@
 import { validationResult } from "express-validator";
 import { RequestHandler } from "express";
 
+import { errorTypes, statusCode } from "../constants";
+
 /**
  * @description middleware to verify if there is any validation error returned from prev middleware
  * @param {Request} req request service object
@@ -11,9 +13,10 @@ import { RequestHandler } from "express";
 export const handleInputErrors: RequestHandler = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() });
+    res
+      .status(statusCode[errorTypes.invalidInput])
+      .json({ message: errorTypes.invalidInput });
     return;
   }
-
   next();
 };

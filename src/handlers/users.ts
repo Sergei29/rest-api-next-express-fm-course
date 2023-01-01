@@ -7,9 +7,7 @@ import prisma from "../db";
 export const createNewUser: RequestHandler = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) {
-      throw new Error("no_credentials_provided");
-    }
+
     const hashedPw = await hashPassword(password);
     const user = await prisma.user.create({
       data: {
@@ -32,9 +30,6 @@ export const createNewUser: RequestHandler = async (req, res, next) => {
 export const signIn: RequestHandler = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) {
-      throw new Error("no_credentials_provided");
-    }
 
     const user = await prisma.user.findUnique({
       where: { username },
